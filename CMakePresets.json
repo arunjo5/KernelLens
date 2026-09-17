@@ -6,11 +6,32 @@
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_TESTING": "OFF",
+        "LATENCY_SANITIZERS": "OFF"
+      }
+    },
+    {
+      "name": "test",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-sanitize",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BUILD_TESTING": "ON",
+        "LATENCY_SANITIZERS": "ON"
       }
     }
   ],
   "buildPresets": [
-    {"name": "release", "configurePreset": "release"}
+    {"name": "release", "configurePreset": "release"},
+    {"name": "test", "configurePreset": "test"}
+  ],
+  "testPresets": [
+    {
+      "name": "test",
+      "configurePreset": "test",
+      "output": {"outputOnFailure": true},
+      "environment": {"ASAN_OPTIONS": "detect_leaks=1", "UBSAN_OPTIONS": "halt_on_error=1"}
+    }
   ]
 }

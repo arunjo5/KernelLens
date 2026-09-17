@@ -24,6 +24,24 @@ The executable is `build/latency-tracer`. CMake also generates the kernel header
 
 On macOS, add `-DLATENCY_BUILD_BPF=OFF` to the configure command to build only the histogram and metrics library. Tracing requires Linux.
 
+## Test
+
+The test preset enables AddressSanitizer and UndefinedBehaviorSanitizer. Tests cover histogram boundaries, percentiles, counter resets, and the metrics endpoint. CMake uses an installed Catch2 v3 or downloads a checksum-verified copy of Catch2 3.7.1.
+
+```sh
+cmake --preset test
+cmake --build --preset test
+ctest --preset test
+```
+
+Use the release build for kernel checks on a Linux test host or VM. These checks require root, writable cgroup v2, and Python 3.10 or newer. They create temporary workloads to check PID and cgroup filters, scheduling under contention, and disk I/O.
+
+```sh
+sudo python3 scripts/test-kernel.py --tracer ./build/latency-tracer
+```
+
+Results stay in `.local/kernel-smoke`. Use `--io-dir` to select a filesystem that supports direct I/O if `/var/tmp` does not.
+
 ## Run
 
 Run as root on the Linux host. For containers, use the PID visible on the host or the container's cgroup v2 path.

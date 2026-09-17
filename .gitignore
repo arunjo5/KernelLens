@@ -1,0 +1,9 @@
+/.local/
+/build*/
+/bench/
+/results.md
+/results/
+/trace.jsonl
+__pycache__/
+*.pyc
+.DS_Store
